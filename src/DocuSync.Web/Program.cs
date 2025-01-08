@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Identity.Web;
 using DocuSync.Web.Components;
+using DocuSync.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,7 @@ builder.Services.AddRazorComponents()
    .AddInteractiveServerComponents();
 
 builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddDocuSyncInfrastructure(builder.Configuration);
 
 // Azure AD Authentication
 builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
