@@ -10,6 +10,10 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Identity.Web;
 using System;
 using DocuSync.Infrastructure.Configuration;
+using DocuSync.Domain.Identity;
+using DocuSync.Infrastructure.Identity;
+using DocuSync.Infrastructure.Identity.Interfaces;
+using DocuSync.Infrastructure.Identity.Services;
 
 namespace DocuSync.Infrastructure.Extensions
 {
@@ -50,6 +54,8 @@ namespace DocuSync.Infrastructure.Extensions
             services.AddScoped<IDocumentTypeRepository, DocumentTypeRepository>();
             services.AddScoped<IRequirementRepository, RequirementRepository>();
 
+            services.AddScoped<IUserClaimsAccessor, DesignTimeClaimsAccessor>();
+
             // Add Identity Services
             services.AddDocuSyncIdentity(configuration);
 
@@ -83,6 +89,8 @@ namespace DocuSync.Infrastructure.Extensions
                 options.SaveTokens = true;
                 options.UseTokenLifetime = true;
             });
+
+            services.AddScoped<ICurrentUser, CurrentUserService>();
 
             return services;
         }
