@@ -1,16 +1,22 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
-
-  <ItemGroup>
-    <ProjectReference Include="..\DocuSync.Infrastructure\DocuSync.Infrastructure.csproj" />
-	  <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
-	  <PackageReference Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" Version="6.0.36" />
-	  <PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
-  </ItemGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>aspnet-DocuSync.Web-4573b221-ec1a-4e45-b1f6-550289a0a559</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="Data\app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.11" />
+    <PackageReference Include="Microsoft.Identity.Web" Version="3.5.0" />
+  </ItemGroup>
 
 </Project>
