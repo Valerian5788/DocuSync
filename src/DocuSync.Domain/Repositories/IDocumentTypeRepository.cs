@@ -1,4 +1,5 @@
 ﻿using DocuSync.Domain.Common;
+using DocuSync.Domain.Entities;
 using DocuSync.Domain.Entities.Enums;
 using System.Xml.Linq;
 

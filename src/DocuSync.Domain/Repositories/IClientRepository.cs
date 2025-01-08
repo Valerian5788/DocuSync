@@ -1,4 +1,5 @@
 ﻿using DocuSync.Domain.Common;
+using DocuSync.Domain.Entities;
 
 namespace DocuSync.Domain.Repositories
 {
