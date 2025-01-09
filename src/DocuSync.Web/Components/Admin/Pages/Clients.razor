@@ -1,4 +1,5 @@
 ﻿@page "/admin/clients"
+@using DocuSync.Application.Services.Interfaces
 @using Microsoft.AspNetCore.Authorization
 @using MudBlazor
 @using DocuSync.Application.Authorization.Constants
@@ -7,6 +8,7 @@
 @using DocuSync.Web.Components.Admin.Models
 @using DocuSync.Web.Components.Admin.Dialogs
 @attribute [Authorize(Policy = Policies.IsAdmin)]
+@inject IClientService ClientService
 
 <PageTitle>Client Management - DocuSync</PageTitle>
 
@@ -51,6 +53,31 @@
     private bool _loading = false;
     private List<Client> _clients = new();
 
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _loading = true;
+            var result = await ClientService.GetAllAsync();
+            if (result.IsSuccess)
+            {
+                _clients = result.Data.ToList();
+            }
+            else
+            {
+                Snackbar.Add(result.Error, Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("An unexpected error occurred", Severity.Error);
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
     private async Task AddClient()
     {
         var parameters = new DialogParameters
@@ -63,9 +90,34 @@
 
         if (!result.Canceled)
         {
-            var model = (ClientViewModel)result.Data;
-            // TODO: Save client
-            Snackbar.Add("Client added successfully", Severity.Success);
+            try
+            {
+                var model = (ClientViewModel)result.Data;
+                var serviceResult = await ClientService.CreateAsync(model.Name, model.HorusEmail);
+
+                if (serviceResult.IsSuccess)
+                {
+                    await RefreshClients();
+                    Snackbar.Add("Client added successfully", Severity.Success);
+                }
+                else
+                {
+                    Snackbar.Add(serviceResult.Error, Severity.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Add("An unexpected error occurred", Severity.Error);
+            }
+        }
+    }
+
+    private async Task RefreshClients()
+    {
+        var result = await ClientService.GetAllAsync();
+        if (result.IsSuccess)
+        {
+            _clients = result.Data.ToList();
         }
     }
 
@@ -78,19 +130,36 @@
                 Status = client.Status
             };
 
-        var parameters = new DialogParameters
-        {
-            { "Model", model }
-        };
-
+        var parameters = new DialogParameters { { "Model", model } };
         var dialog = await DialogService.ShowAsync<EditClientDialog>("Edit Client", parameters);
         var result = await dialog.Result;
 
         if (!result.Canceled)
         {
-            var updatedModel = (ClientViewModel)result.Data;
-            // TODO: Update client
-            Snackbar.Add("Client updated successfully", Severity.Success);
+            try
+            {
+                var updatedModel = (ClientViewModel)result.Data;
+                var serviceResult = await ClientService.UpdateAsync(
+                    client.Id,
+                    updatedModel.Name,
+                    updatedModel.HorusEmail,
+                    updatedModel.Status
+                );
+
+                if (serviceResult.IsSuccess)
+                {
+                    await RefreshClients();
+                    Snackbar.Add("Client updated successfully", Severity.Success);
+                }
+                else
+                {
+                    Snackbar.Add(serviceResult.Error, Severity.Error);
+                }
+            }
+            catch
+            {
+                Snackbar.Add("An unexpected error occurred", Severity.Error);
+            }
         }
     }
 
@@ -100,12 +169,28 @@
             "Delete Client",
             "Are you sure you want to delete this client?",
             yesText: "Delete",
-            cancelText: "Cancel");
+            cancelText: "Cancel"
+        );
 
         if (confirmed ?? false)
         {
-            // TODO: Delete client
-            Snackbar.Add("Client deleted successfully", Severity.Success);
+            try
+            {
+                var result = await ClientService.DeleteAsync(client.Id);
+                if (result.IsSuccess)
+                {
+                    await RefreshClients();
+                    Snackbar.Add("Client deleted successfully", Severity.Success);
+                }
+                else
+                {
+                    Snackbar.Add(result.Error, Severity.Error);
+                }
+            }
+            catch
+            {
+                Snackbar.Add("An unexpected error occurred", Severity.Error);
+            }
         }
     }
 }

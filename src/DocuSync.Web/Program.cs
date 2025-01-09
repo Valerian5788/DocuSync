@@ -26,6 +26,7 @@ builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddDocuSyncAuthorization();
+builder.Services.AddApplicationServices();
 
 builder.Services.AddMudServices();
 
