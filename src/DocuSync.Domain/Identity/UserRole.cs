@@ -8,7 +8,7 @@ namespace DocuSync.Domain.Identity
 {
     public static class UserRole
     {
-        public const string Administrator = "Administrator";
-        public const string ClientUser = "ClientUser";
+        public const string Administrator = "Admin";
+        public const string ClientUser = "Client";
     }
 }

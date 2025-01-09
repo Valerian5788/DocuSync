@@ -1,12 +1,12 @@
+using DocuSync.Application.Extensions;
+using DocuSync.Infrastructure.Identity.Interfaces;
+using DocuSync.Web.Components;
+using DocuSync.Web.Identity;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Identity.Web;
-using DocuSync.Web.Components;
-using DocuSync.Infrastructure.Extensions;
-using DocuSync.Infrastructure.Identity.Interfaces;
-using DocuSync.Web.Identity;
-using DocuSync.Application.Extensions;
-using Microsoft.Extensions.Azure;
 using MudBlazor.Services;
+using DocuSync.Infrastructure.Extensions;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,29 +16,25 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddCascadingAuthenticationState();
 
-// Azure AD Authentication
-builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApp(options =>
-    {
-        builder.Configuration.GetSection("AzureAd").Bind(options);
-        options.SignInScheme = "Cookies";
-        options.SignOutScheme = OpenIdConnectDefaults.AuthenticationScheme;
-    });
+// Add authentication services
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+})
+.AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"));
 
+// Add authorization services
 builder.Services.AddDocuSyncAuthorization();
-builder.Services.AddApplicationServices();
 
 builder.Services.AddMudServices();
-
-builder.Services.AddAuthorization(options =>
-{
-    options.FallbackPolicy = options.DefaultPolicy;
-});
-
-
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserClaimsAccessor, ClaimsUserAccessor>();
+
+// Add infrastructure services
 builder.Services.AddDocuSyncInfrastructure(builder.Configuration);
+// Add identity services
+builder.Services.AddDocuSyncIdentity(builder.Configuration);
 
 var app = builder.Build();
 

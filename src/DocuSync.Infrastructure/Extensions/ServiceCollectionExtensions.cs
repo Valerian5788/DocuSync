@@ -56,6 +56,8 @@ namespace DocuSync.Infrastructure.Extensions
 
             services.AddScoped<IUserClaimsAccessor, DesignTimeClaimsAccessor>();
 
+            services.AddScoped<ICurrentUser, CurrentUserService>();
+
             // Add Identity Services
             services.AddDocuSyncIdentity(configuration);
 
@@ -63,8 +65,8 @@ namespace DocuSync.Infrastructure.Extensions
         }
 
         public static IServiceCollection AddDocuSyncIdentity(
-            this IServiceCollection services,
-            IConfiguration configuration)
+    this IServiceCollection services,
+    IConfiguration configuration)
         {
             var options = new IdentityOptions();
             configuration.GetSection(IdentityOptions.SectionName).Bind(options);
@@ -73,15 +75,7 @@ namespace DocuSync.Infrastructure.Extensions
             services.Configure<IdentityOptions>(
                 configuration.GetSection(IdentityOptions.SectionName));
 
-            // Configure Microsoft Identity Web
-            services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-                .AddMicrosoftIdentityWebApp(options =>
-                {
-                    configuration.GetSection(IdentityOptions.SectionName).Bind(options);
-                    options.Instance = "https://login.microsoftonline.com/";
-                    options.CallbackPath = "/signin-oidc";
-                });
-
+            // Configure OpenID Connect options (if needed)
             services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, options =>
             {
                 // Configure additional OpenID Connect options here if needed
@@ -90,6 +84,7 @@ namespace DocuSync.Infrastructure.Extensions
                 options.UseTokenLifetime = true;
             });
 
+            // Register the current user service
             services.AddScoped<ICurrentUser, CurrentUserService>();
 
             return services;
