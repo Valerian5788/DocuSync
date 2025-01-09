@@ -1,20 +1,37 @@
 ﻿@using Microsoft.Identity.Web
-@using MudBlazor
 @inject NavigationManager Navigation
+@using MudBlazor
 
 <AuthorizeView>
     <Authorized>
-        <MudStack Row="true" AlignItems="AlignItems.Center">
-            <MudText>Hello, @context.User.Identity?.Name!</MudText>
-            <MudButton Variant="Variant.Text" OnClick="SignOut">Sign Out</MudButton>
+        <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
+            <MudText Typo="Typo.body2">
+                Hello, @context.User.Identity?.Name!
+            </MudText>
+            <MudButton Variant="Variant.Text"
+                       Color="Color.Inherit"
+                       OnClick="SignOut">
+                Sign Out
+            </MudButton>
         </MudStack>
     </Authorized>
     <NotAuthorized>
-        <MudButton Variant="Variant.Text" OnClick="SignIn">Sign In</MudButton>
+        <MudButton Variant="Variant.Text"
+                   Color="Color.Inherit"
+                   OnClick="SignIn">
+            Sign In
+        </MudButton>
     </NotAuthorized>
 </AuthorizeView>
 
 @code {
-    private void SignIn() => Navigation.NavigateTo("MicrosoftIdentity/Account/SignIn", true);
-    private void SignOut() => Navigation.NavigateTo("MicrosoftIdentity/Account/SignOut", true);
+    private void SignIn()
+    {
+        Navigation.NavigateTo("MicrosoftIdentity/Account/SignIn", true);
+    }
+
+    private void SignOut()
+    {
+        Navigation.NavigateTo("MicrosoftIdentity/Account/SignOut", true);
+    }
 }
