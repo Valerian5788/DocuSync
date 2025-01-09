@@ -5,6 +5,8 @@ using DocuSync.Infrastructure.Extensions;
 using DocuSync.Infrastructure.Identity.Interfaces;
 using DocuSync.Web.Identity;
 using DocuSync.Application.Extensions;
+using Microsoft.Extensions.Azure;
+using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +26,8 @@ builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddDocuSyncAuthorization();
+
+builder.Services.AddMudServices();
 
 builder.Services.AddAuthorization(options =>
 {
