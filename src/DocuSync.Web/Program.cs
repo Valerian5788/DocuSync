@@ -4,6 +4,7 @@ using DocuSync.Web.Components;
 using DocuSync.Infrastructure.Extensions;
 using DocuSync.Infrastructure.Identity.Interfaces;
 using DocuSync.Web.Identity;
+using DocuSync.Application.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,10 +23,13 @@ builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
         options.SignOutScheme = OpenIdConnectDefaults.AuthenticationScheme;
     });
 
+builder.Services.AddDocuSyncAuthorization();
+
 builder.Services.AddAuthorization(options =>
 {
     options.FallbackPolicy = options.DefaultPolicy;
 });
+
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserClaimsAccessor, ClaimsUserAccessor>();

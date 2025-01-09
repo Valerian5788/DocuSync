@@ -23,6 +23,7 @@
 	</ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DocuSync.Application\DocuSync.Application.csproj" />
     <ProjectReference Include="..\DocuSync.Infrastructure\DocuSync.Infrastructure.csproj" />
   </ItemGroup>
 
