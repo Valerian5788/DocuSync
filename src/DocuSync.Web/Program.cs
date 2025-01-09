@@ -9,22 +9,27 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
-   .AddInteractiveServerComponents();
+    .AddInteractiveServerComponents();
 
 builder.Services.AddCascadingAuthenticationState();
-builder.Services.AddDocuSyncInfrastructure(builder.Configuration);
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<IUserClaimsAccessor, ClaimsUserAccessor>();
 
 // Azure AD Authentication
 builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-   .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"));
+    .AddMicrosoftIdentityWebApp(options =>
+    {
+        builder.Configuration.GetSection("AzureAd").Bind(options);
+        options.SignInScheme = "Cookies";
+        options.SignOutScheme = OpenIdConnectDefaults.AuthenticationScheme;
+    });
 
 builder.Services.AddAuthorization(options =>
 {
-    // This policy requires authentication for all pages
     options.FallbackPolicy = options.DefaultPolicy;
 });
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IUserClaimsAccessor, ClaimsUserAccessor>();
+builder.Services.AddDocuSyncInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
@@ -43,7 +48,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorComponents<App>()
-   .AddInteractiveServerRenderMode()
-   .RequireAuthorization();
+    .AddInteractiveServerRenderMode();
 
 app.Run();

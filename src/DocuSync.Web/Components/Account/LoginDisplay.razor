@@ -1,0 +1,28 @@
+﻿@using Microsoft.Identity.Web
+@inject NavigationManager Navigation
+
+<AuthorizeView>
+    <Authorized>
+        <div class="nav-item px-3">
+            <span class="nav-link">Hello, @context.User.Identity?.Name!</span>
+            <button class="nav-link" @onclick="SignOut">Sign Out</button>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <div class="nav-item px-3">
+            <button class="nav-link" @onclick="SignIn">Sign In</button>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private void SignIn()
+    {
+        Navigation.NavigateTo("MicrosoftIdentity/Account/SignIn", true);
+    }
+
+    private void SignOut()
+    {
+        Navigation.NavigateTo("MicrosoftIdentity/Account/SignOut", true);
+    }
+}
