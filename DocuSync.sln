@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocuSync.Application.Tests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocuSync.Infrastructure.Tests", "tests\DocuSync.Infrastructure.Tests\DocuSync.Infrastructure.Tests.csproj", "{92E016CE-4B84-4056-B1A9-40FED0BAA467}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocuSync.Functions", "src\DocuSync.Functions\DocuSync.Functions.csproj", "{7E449EE1-6019-45BF-9BEA-07002B291D47}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{92E016CE-4B84-4056-B1A9-40FED0BAA467}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92E016CE-4B84-4056-B1A9-40FED0BAA467}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92E016CE-4B84-4056-B1A9-40FED0BAA467}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E449EE1-6019-45BF-9BEA-07002B291D47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E449EE1-6019-45BF-9BEA-07002B291D47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E449EE1-6019-45BF-9BEA-07002B291D47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E449EE1-6019-45BF-9BEA-07002B291D47}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,5 +73,6 @@ Global
 		{08387E56-00EC-4A3C-AAB2-E1BDCB482632} = {D79CB9DE-F76E-4F91-AD3E-AD35A899E8AE}
 		{2CD0B268-D34B-4FAD-A015-C465D30DF199} = {D79CB9DE-F76E-4F91-AD3E-AD35A899E8AE}
 		{92E016CE-4B84-4056-B1A9-40FED0BAA467} = {D79CB9DE-F76E-4F91-AD3E-AD35A899E8AE}
+		{7E449EE1-6019-45BF-9BEA-07002B291D47} = {05709226-FB59-40F5-BB69-FEEB7289AC5F}
 	EndGlobalSection
 EndGlobal

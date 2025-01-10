@@ -91,5 +91,14 @@ namespace DocuSync.Infrastructure.Data.Repositories
             _context.Requirements.Update(requirement);
             await _context.SaveChangesAsync(cancellation);
         }
+
+        public async Task<IEnumerable<Requirement>> GetActiveAsync(CancellationToken cancellation = default)
+        {
+            return await _context.Requirements
+                .Include(r => r.DocumentType)
+                .Where(r => r.Status != RequirementStatus.Completed
+                         && r.Status != RequirementStatus.Cancelled)
+                .ToListAsync(cancellation);
+        }
     }
 }

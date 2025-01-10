@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "DocuSync.Functions": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7253",
+      "launchBrowser": false
+    }
+  }
+}

@@ -15,7 +15,7 @@ namespace DocuSync.Domain.Entities
 
         // Navigation properties (for EF)
         private Client Client { get; set; }
-        private DocumentType DocumentType { get; set; }
+        public Guid DocumentTypeId { get; private set; }
 
         // For EF Core
         private Requirement() { }

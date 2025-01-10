@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using DocuSync.Application.Services.Interfaces;
 using DocuSync.Infrastructure.Documents;
 using DocuSync.Application.Services;
+using DocuSync.Domain.Repositories;
+using DocuSync.Infrastructure.Data.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +37,8 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserClaimsAccessor, ClaimsUserAccessor>();
 builder.Services.AddSingleton<IDocumentStorage, AzureBlobStorage>();
 builder.Services.AddScoped<IDocumentService, DocumentService>();
+builder.Services.AddScoped<IRequirementRepository, RequirementRepository>();
+builder.Services.AddScoped<IRequirementService, RequirementService>();
 
 // Add infrastructure services
 builder.Services.AddDocuSyncInfrastructure(builder.Configuration);

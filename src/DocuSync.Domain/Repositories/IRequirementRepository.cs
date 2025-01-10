@@ -12,5 +12,6 @@ namespace DocuSync.Domain.Repositories
         Task<IEnumerable<Requirement>> GetUpcomingAsync(int daysAhead);
         Task<Requirement> GetByIdAsync(Guid id, CancellationToken cancellation = default);
         Task UpdateAsync(Requirement requirement, CancellationToken cancellation = default);
+        Task<IEnumerable<Requirement>> GetActiveAsync(CancellationToken cancellation = default);
     }
 }
