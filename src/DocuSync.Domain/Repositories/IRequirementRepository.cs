@@ -10,5 +10,7 @@ namespace DocuSync.Domain.Repositories
         Task<IEnumerable<Requirement>> GetByStatusAsync(RequirementStatus status);
         Task<IEnumerable<Requirement>> GetOverdueAsync();
         Task<IEnumerable<Requirement>> GetUpcomingAsync(int daysAhead);
+        Task<Requirement> GetByIdAsync(Guid id, CancellationToken cancellation = default);
+        Task UpdateAsync(Requirement requirement, CancellationToken cancellation = default);
     }
 }

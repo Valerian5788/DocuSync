@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<ItemGroup>
+		<PackageReference Include="Azure.Storage.Blobs" Version="12.23.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -17,6 +18,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\DocuSync.Application\DocuSync.Application.csproj" />
 	  <ProjectReference Include="..\DocuSync.Domain\DocuSync.Domain.csproj" />
 	</ItemGroup>
 

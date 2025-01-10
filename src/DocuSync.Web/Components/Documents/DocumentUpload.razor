@@ -1,0 +1,86 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using DocuSync.Application.Services.Interfaces
+@inject IDocumentService DocumentService
+@inject IJSRuntime JS
+
+<div>
+    @if (_uploading)
+    {
+        <div class="flex items-center">
+            <div class="spinner mr-2"></div>
+            <span>Uploading...</span>
+        </div>
+    }
+    else if (!string.IsNullOrEmpty(_error))
+    {
+        <div class="text-red-500 text-sm mb-2">@_error</div>
+        <button class="btn btn-sm btn-secondary" @onclick="ResetError">Try Again</button>
+    }
+    else
+    {
+        <InputFile OnChange="HandleFileSelected" class="hidden" id="@_inputId" />
+        <button class="btn btn-primary btn-sm" @onclick="@(() => ClickFileInput())">
+            Upload Document
+        </button>
+    }
+</div>
+
+@code {
+    [Parameter] public Guid RequirementId { get; set; }
+    [Parameter] public EventCallback OnUploadComplete { get; set; }
+
+    private bool _uploading;
+    private string _error;
+    private string _inputId = Guid.NewGuid().ToString();
+
+    private async Task ClickFileInput()
+    {
+        await JS.InvokeVoidAsync("click", await JS.InvokeAsync<IJSObjectReference>("document.getElementById", _inputId));
+    }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            _uploading = true;
+            _error = null;
+            StateHasChanged();
+
+            var file = e.File;
+            if (file.Size > 10 * 1024 * 1024) // 10MB limit
+            {
+                _error = "File too large. Maximum size is 10MB.";
+                return;
+            }
+
+            using var stream = file.OpenReadStream();
+            var result = await DocumentService.UploadForRequirementAsync(
+                RequirementId,
+                stream,
+                file.Name);
+
+            if (!result.Success)
+            {
+                _error = result.Error ?? "Upload failed";
+                return;
+            }
+
+            await OnUploadComplete.InvokeAsync();
+        }
+        catch (Exception ex)
+        {
+            _error = "Upload failed. Please try again.";
+        }
+        finally
+        {
+            _uploading = false;
+            StateHasChanged();
+        }
+    }
+
+    private void ResetError()
+    {
+        _error = null;
+        StateHasChanged();
+    }
+}

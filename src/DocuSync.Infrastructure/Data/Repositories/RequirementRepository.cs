@@ -80,5 +80,16 @@ namespace DocuSync.Infrastructure.Data.Repositories
                 .OrderBy(r => r.DueDate)
                 .ToListAsync();
         }
+
+        public async Task<Requirement> GetByIdAsync(Guid id, CancellationToken cancellation = default)
+        {
+            return await _context.Requirements.FindAsync(new object[] { id }, cancellation);
+        }
+
+        public async Task UpdateAsync(Requirement requirement, CancellationToken cancellation = default)
+        {
+            _context.Requirements.Update(requirement);
+            await _context.SaveChangesAsync(cancellation);
+        }
     }
 }

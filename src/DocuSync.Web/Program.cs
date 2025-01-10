@@ -7,6 +7,9 @@ using Microsoft.Identity.Web;
 using MudBlazor.Services;
 using DocuSync.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using DocuSync.Application.Services.Interfaces;
+using DocuSync.Infrastructure.Documents;
+using DocuSync.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +33,8 @@ builder.Services.AddDocuSyncAuthorization();
 builder.Services.AddMudServices();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserClaimsAccessor, ClaimsUserAccessor>();
+builder.Services.AddSingleton<IDocumentStorage, AzureBlobStorage>();
+builder.Services.AddScoped<IDocumentService, DocumentService>();
 
 // Add infrastructure services
 builder.Services.AddDocuSyncInfrastructure(builder.Configuration);

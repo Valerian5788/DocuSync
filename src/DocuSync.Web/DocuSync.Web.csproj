@@ -7,10 +7,6 @@
     <UserSecretsId>aspnet-DocuSync.Web-4573b221-ec1a-4e45-b1f6-550289a0a559</UserSecretsId>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Update="Data\app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
-  </ItemGroup>
-
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />

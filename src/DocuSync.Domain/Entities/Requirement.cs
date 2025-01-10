@@ -6,9 +6,12 @@ namespace DocuSync.Domain.Entities
     public class Requirement : Entity
     {
         public Guid ClientId { get; private set; }
-        public Guid DocumentTypeId { get; private set; }
+        public DocumentType DocumentType { get; private set; }
         public DateTime DueDate { get; private set; }
         public RequirementStatus Status { get; private set; }
+
+        public string BlobId { get; private set; }
+        public DateTimeOffset? UploadedAt { get; private set; }
 
         // Navigation properties (for EF)
         private Client Client { get; set; }
@@ -111,6 +114,24 @@ namespace DocuSync.Domain.Entities
             if (Status == RequirementStatus.Cancelled)
                 throw new InvalidOperationException("Cannot change status of cancelled requirement");
 
+        }
+
+        public void AttachDocument(string blobId)
+        {
+            if (string.IsNullOrEmpty(blobId))
+                throw new ArgumentException("Blob ID is required", nameof(blobId));
+
+            BlobId = blobId;
+            UploadedAt = DateTimeOffset.UtcNow;
+            MarkAsReceived();
+        }
+
+        public void RemoveDocument()
+        {
+            BlobId = null;
+            UploadedAt = null;
+            Status = RequirementStatus.Pending;
+            UpdateAuditFields("system");
         }
     }
 }
