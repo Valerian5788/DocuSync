@@ -11,5 +11,6 @@ namespace DocuSync.Application.Services.Interfaces
         Task<Result<Client>> CreateAsync(string name, string horusEmail);
         Task<Result<Client>> UpdateAsync(Guid id, string name, string horusEmail, ClientStatus status);
         Task<Result<bool>> DeleteAsync(Guid id);
+        Task<Result<Client>> GetByUserEmailAsync(string email);
     }
 }
