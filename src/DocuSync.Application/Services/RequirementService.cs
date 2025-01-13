@@ -23,11 +23,6 @@ namespace DocuSync.Application.Services
             _logger = logger;
         }
 
-        public Task<Result<Requirement>> CreateAsync(Guid clientId, Guid documentTypeId, DateTime dueDate)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<Result<IEnumerable<Requirement>>> GetActiveForClientAsync(Guid clientId)
         {
             try
@@ -46,21 +41,99 @@ namespace DocuSync.Application.Services
             }
         }
 
-        public Task<IEnumerable<Requirement>> GetActiveRequirementsAsync()
+        public async Task<Result<Requirement>> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var requirement = await _repository.GetByIdAsync(id);
+                if (requirement == null)
+                    return Result<Requirement>.Failure("Requirement not found");
+
+                return Result<Requirement>.Success(requirement);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting requirement {Id}", id);
+                return Result<Requirement>.Failure("Failed to get requirement");
+            }
         }
 
-        public Task<Result<Requirement>> GetByIdAsync(Guid id)
+        public async Task<Result<Requirement>> CreateAsync(Guid clientId, Guid documentTypeId, DateTime dueDate)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var requirement = new Requirement(clientId, documentTypeId, dueDate);
+                await _repository.AddAsync(requirement);
+                return Result<Requirement>.Success(requirement);
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Invalid requirement data");
+                return Result<Requirement>.Failure(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating requirement");
+                return Result<Requirement>.Failure("Failed to create requirement");
+            }
         }
 
-        public Task<Result<bool>> UpdateStatusAsync(Guid id, RequirementStatus status)
+        public async Task<Result<bool>> UpdateStatusAsync(Guid id, RequirementStatus status)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var requirement = await _repository.GetByIdAsync(id);
+                if (requirement == null)
+                    return Result<bool>.Failure("Requirement not found");
+
+                switch (status)
+                {
+                    case RequirementStatus.Received:
+                        requirement.MarkAsReceived();
+                        break;
+                    case RequirementStatus.Validated:
+                        requirement.MarkAsValidated();
+                        break;
+                    case RequirementStatus.Completed:
+                        requirement.MarkAsCompleted();
+                        break;
+                    default:
+                        return Result<bool>.Failure("Invalid status transition");
+                }
+
+                await _repository.UpdateAsync(requirement);
+                return Result<bool>.Success(true);
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogWarning(ex, "Invalid status transition for requirement {Id}", id);
+                return Result<bool>.Failure(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating requirement status {Id}", id);
+                return Result<bool>.Failure("Failed to update requirement status");
+            }
         }
 
-        // Implement other interface methods...
+        public async Task<Result<IEnumerable<Requirement>>> GetActiveRequirementsAsync()
+        {
+            try
+            {
+                var requirements = await _repository.GetAllAsync();
+                var active = requirements.Where(r =>
+                    r.Status != RequirementStatus.Completed &&
+                    r.Status != RequirementStatus.Cancelled);
+
+                return Result<IEnumerable<Requirement>>.Success(active);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting active requirements");
+                return Result<IEnumerable<Requirement>>.Failure("Failed to get active requirements");
+            }
+        }
+
+
     }
 }

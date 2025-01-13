@@ -11,7 +11,7 @@ namespace DocuSync.Application.Services.Interfaces
 {
     public interface IRequirementService
     {
-        Task<IEnumerable<Requirement>> GetActiveRequirementsAsync();
+        Task<Result<IEnumerable<Requirement>>> GetActiveRequirementsAsync();
         Task<Result<IEnumerable<Requirement>>> GetActiveForClientAsync(Guid clientId);
         Task<Result<Requirement>> GetByIdAsync(Guid id);
         Task<Result<Requirement>> CreateAsync(Guid clientId, Guid documentTypeId, DateTime dueDate);
