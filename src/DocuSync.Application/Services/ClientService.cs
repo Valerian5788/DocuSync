@@ -72,5 +72,10 @@ namespace DocuSync.Application.Services
             await _repository.DeleteAsync(client);
             return Result<bool>.Success(true);
         }
+
+        public Task<Result<Client>> GetByUserEmailAsync(string email)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

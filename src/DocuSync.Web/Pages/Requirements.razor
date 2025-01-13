@@ -2,6 +2,8 @@
 @using DocuSync.Application.Services.Interfaces
 @using DocuSync.Domain.Entities
 @using DocuSync.Domain.Repositories
+@using DocuSync.Web.Components.Documents
+@using Microsoft.AspNetCore.Components.Web
 @inject IRequirementService RequirementService
 @inject IDocumentService DocumentService
 
@@ -57,8 +59,16 @@
     {
         try
         {
-            _requirements = await RequirementService.GetActiveRequirementsAsync();
-            StateHasChanged();
+            var result = await RequirementService.GetActiveRequirementsAsync();
+            if (result.IsSuccess)
+            {
+                _requirements = result.Data;
+                StateHasChanged();
+            }
+            else
+            {
+                _error = result.Error;
+            }
         }
         catch (Exception ex)
         {
