@@ -45,5 +45,10 @@ namespace DocuSync.Application.Services
             await _repository.DeleteAsync(documentType);
             return Result<bool>.Success(true);
         }
+
+        public Task<Result<DocumentType>> UpdateAsync(Guid id, string name, DocumentFrequency frequency)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

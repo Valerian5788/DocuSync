@@ -1,0 +1,46 @@
+﻿@page "/missing-documents"
+@using DocuSync.Web.Components
+@using DocuSync.Web.ExcelTemp
+@using MudBlazor
+@inject IExcelDocumentService ExcelService
+@inject ISnackbar Snackbar
+
+<PageTitle>Missing Documents - DocuSync</PageTitle>
+
+<MudContainer Class="mt-4">
+    <MudPaper Class="pa-4">
+        <MudText Typo="Typo.h4" Class="mb-4">Missing Documents</MudText>
+        
+        @if (_error != null)
+        {
+            <MudAlert Severity="Severity.Error" Class="mb-4">
+                @_error
+            </MudAlert>
+        }
+
+        <DocumentBoard Documents="@_documents" Loading="@_loading" />
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private IEnumerable<MissingDocumentDto> _documents = new List<MissingDocumentDto>();
+    private bool _loading = true;
+    private string _error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _documents = await ExcelService.GetMissingDocumentsAsync();
+        }
+        catch (Exception ex)
+        {
+            _error = "Failed to load missing documents. Please try again later.";
+            Snackbar.Add(_error, Severity.Error);
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+}

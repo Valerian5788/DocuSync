@@ -1,0 +1,48 @@
+﻿@using DocuSync.Web.ExcelTemp
+@using MudBlazor
+
+<MudTable Items="@Documents" Loading="@Loading" Hover="true">
+    <HeaderContent>
+        <MudTh>Company</MudTh>
+        <MudTh>Document Type</MudTh>
+        <MudTh>Due Date</MudTh>
+        <MudTh>Status</MudTh>
+        <MudTh>Description</MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.CompanyName</MudTd>
+        <MudTd>@context.DocumentType</MudTd>
+        <MudTd>@context.DueDate.ToShortDateString()</MudTd>
+        <MudTd>
+            <MudChip T="string" Color="@GetStatusColor(context.Status)" Size="Size.Small" Variant="Variant.Text">
+                @context.Status
+            </MudChip>
+        </MudTd>
+        <MudTd>@context.Description</MudTd>
+        <MudTd>
+            <MudButton Variant="Variant.Filled" 
+                       Color="Color.Primary"
+                       Size="Size.Small"
+                       Disabled="true">
+                Upload (Coming Soon)
+            </MudButton>
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    [Parameter] public IEnumerable<MissingDocumentDto> Documents { get; set; }
+    [Parameter] public bool Loading { get; set; }
+
+    private Color GetStatusColor(string status)
+    {
+        return status.ToLower() switch
+        {
+            "overdue" => Color.Error,
+            "pending" => Color.Warning,
+            "received" => Color.Success,
+            _ => Color.Default
+        };
+    }
+}
