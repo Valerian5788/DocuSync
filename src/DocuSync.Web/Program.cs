@@ -39,6 +39,8 @@ builder.Services.AddSingleton<IDocumentStorage, AzureBlobStorage>();
 builder.Services.AddScoped<IDocumentService, DocumentService>();
 builder.Services.AddScoped<IRequirementRepository, RequirementRepository>();
 builder.Services.AddScoped<IRequirementService, RequirementService>();
+builder.Services.AddScoped<IDocumentTypeRepository, DocumentTypeRepository>();
+builder.Services.AddScoped<IDocumentTypeService, DocumentTypeService>();
 
 // Add infrastructure services
 builder.Services.AddDocuSyncInfrastructure(builder.Configuration);

@@ -1,0 +1,131 @@
+﻿@page "/admin/document-types"
+@using DocuSync.Application.Authorization.Constants
+@using DocuSync.Application.Services.Interfaces
+@using DocuSync.Domain.Entities
+@using DocuSync.Web.Components.Admin.Dialogs
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+@inject IDocumentTypeService DocumentTypeService
+@attribute [Authorize(Policy = Policies.IsAdmin)]
+
+<MudContainer Class="mt-4">
+    <MudText Typo="Typo.h4" Class="mb-4">Document Types</MudText>
+
+    <MudButton Color="Color.Primary" 
+               StartIcon="@Icons.Material.Filled.Add" 
+               OnClick="OpenCreateDialog">
+        Add Document Type
+    </MudButton>
+
+    <MudTable Items="@_documentTypes" Dense="true" Hover="true" Class="mt-4">
+        <HeaderContent>
+            <MudTh>Name</MudTh>
+            <MudTh>Frequency</MudTh>
+            <MudTh>Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>@context.Name</MudTd>
+            <MudTd>@context.Frequency</MudTd>
+            <MudTd>
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" 
+                             OnClick="@(() => OpenEditDialog(context))" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" 
+                             OnClick="@(() => OpenDeleteDialog(context))" />
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+</MudContainer>
+
+@code {
+    private IEnumerable<DocumentType> _documentTypes = new List<DocumentType>();
+    private bool _loading = true;
+
+    [Inject] private ISnackbar Snackbar { get; set; } = default!;
+    [Inject] private IDialogService DialogService { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDocumentTypes();
+    }
+
+    private async Task LoadDocumentTypes()
+    {
+        try
+        {
+            var result = await DocumentTypeService.GetAllAsync();
+            if (result.IsSuccess)
+            {
+                _documentTypes = result.Data;
+            }
+            else
+            {
+                Snackbar.Add(result.Error, Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Failed to load document types", Severity.Error);
+        }
+        finally
+        {
+            _loading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task OpenCreateDialog()
+    {
+        var parameters = new DialogParameters();
+        var dialog = await DialogService.ShowAsync<EditDocumentTypeDialog>("Create Document Type", parameters);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            await LoadDocumentTypes();
+            Snackbar.Add("Document type created", Severity.Success);
+        }
+    }
+
+    private async Task OpenEditDialog(DocumentType documentType)
+    {
+        var parameters = new DialogParameters
+        {
+            { "DocumentType", documentType }
+        };
+        var dialog = await DialogService.ShowAsync<EditDocumentTypeDialog>("Edit Document Type", parameters);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            await LoadDocumentTypes();
+            Snackbar.Add("Document type updated", Severity.Success);
+        }
+    }
+
+    private async Task OpenDeleteDialog(DocumentType documentType)
+    {
+        var parameters = new DialogParameters
+        {
+            { "ContentText", $"Are you sure you want to delete '{documentType.Name}'?" },
+            { "ButtonText", "Delete" },
+            { "Color", Color.Error }
+        };
+
+        var dialog = await DialogService.ShowAsync<MudMessageBox>("Confirm Delete", parameters);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            var deleteResult = await DocumentTypeService.DeleteAsync(documentType.Id);
+            if (deleteResult.IsSuccess)
+            {
+                await LoadDocumentTypes();
+                Snackbar.Add("Document type deleted", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add(deleteResult.Error, Severity.Error);
+            }
+        }
+    }
+}

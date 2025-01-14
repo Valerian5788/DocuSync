@@ -14,5 +14,6 @@ namespace DocuSync.Application.Services.Interfaces
         Task<Result<IEnumerable<DocumentType>>> GetAllAsync();
         Task<Result<DocumentType>> CreateAsync(string name, DocumentFrequency frequency);
         Task<Result<bool>> DeleteAsync(Guid id);
+        Task<Result<DocumentType>> UpdateAsync(Guid id, string name, DocumentFrequency frequency);
     }
 }

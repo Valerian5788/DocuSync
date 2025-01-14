@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
@@ -13,20 +14,22 @@ namespace DocuSync.Functions.Graph.Functions
     {
         private readonly ILogger<TestGraphConnection> _logger;
         private readonly GraphServiceClient _graphClient;
+        private readonly IConfiguration _configuration;
 
-        public TestGraphConnection(ILogger<TestGraphConnection> logger, GraphServiceClient graphClient)
+        public TestGraphConnection(ILogger<TestGraphConnection> logger, GraphServiceClient graphClient, IConfiguration configuration)
         {
             _logger = logger;
             _graphClient = graphClient;
+            _configuration = configuration;
         }
 
         [Function("TestGraphConnection")]
         public async Task<HttpResponseData> RunAsync([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req)
         {
+            var config = _configuration.GetValue<string>("Graph:UserId");
             try
             {
-                // Test reading emails
-                var messages = await _graphClient.Users["{user-id}"].Messages
+                var messages = await _graphClient.Users[config].Messages
                     .GetAsync(requestConfiguration =>
                     {
                         requestConfiguration.QueryParameters.Top = 1;

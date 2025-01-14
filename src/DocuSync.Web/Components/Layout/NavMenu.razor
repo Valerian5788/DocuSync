@@ -1,4 +1,5 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using DocuSync.Application.Authorization.Constants
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">DocuSync</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -13,6 +14,30 @@
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
             </NavLink>
+        </div>
+
+        @* Administration Section *@
+        <AuthorizeView Policy="@Policies.IsAdmin">
+            <Authorized>
+                <div class="nav-item px-3 mt-3">
+                    <span class="text-light small">Administration</span>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="admin/clients">
+                        <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Clients
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="admin/document-types">
+                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Document Types
+                    </NavLink>
+                </div>
+            </Authorized>
+        </AuthorizeView>
+
+        @* Documents Section *@
+        <div class="nav-item px-3 mt-3">
+            <span class="text-light small">Documents</span>
         </div>
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="requirements">

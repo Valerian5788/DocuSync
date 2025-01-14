@@ -1,0 +1,86 @@
+﻿@using DocuSync.Application.Common.Models
+@using DocuSync.Application.Common.Results
+@using DocuSync.Application.Services.Interfaces
+@using DocuSync.Domain.Entities
+@using DocuSync.Domain.Entities.Enums
+@using MudBlazor
+@inject IJSRuntime _jsRuntime
+
+<MudDialog>
+    <DialogContent>
+        <MudTextField @bind-Value="model.Name" Label="Name" Required="true" />
+        <MudSelect @bind-Value="model.Frequency" Label="Frequency" Required="true">
+            <MudSelectItem Value="@DocumentFrequency.Monthly">Monthly</MudSelectItem>
+            <MudSelectItem Value="@DocumentFrequency.Quarterly">Quarterly</MudSelectItem>
+            <MudSelectItem Value="@DocumentFrequency.Annual">Annual</MudSelectItem>
+        </MudSelect>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Save</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
+    [Inject] private IDocumentTypeService DocumentTypeService { get; set; } = default!;
+    [Parameter] public DocumentType? DocumentType { get; set; }
+
+    private DocumentTypeDto model = new();
+    private bool _processing;
+
+    protected override void OnInitialized()
+    {
+        if (DocumentType != null)
+        {
+            // Edit mode - create DTO from entity
+            model = DocumentTypeDto.FromEntity(DocumentType);
+        }
+    }
+
+    private async Task Submit()
+    {
+        if (_processing) return;
+        _processing = true;
+
+        try
+        {
+            Result<DocumentType> result;
+            if (DocumentType == null)
+            {
+                // Create new
+                result = await DocumentTypeService.CreateAsync(
+                    model.Name,
+                    model.Frequency);
+            }
+            else
+            {
+                // Update existing - add to service interface
+                result = await DocumentTypeService.UpdateAsync(
+                    DocumentType.Id,
+                    model.Name,
+                    model.Frequency);
+            }
+
+            if (result.IsSuccess)
+            {
+                MudDialog.Close(DialogResult.Ok(result.Data));
+            }
+            else
+            {
+                await _jsRuntime.InvokeVoidAsync("alert", result.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            await _jsRuntime.InvokeVoidAsync("alert", "Failed to save document type");
+        }
+        finally
+        {
+            _processing = false;
+            StateHasChanged();
+        }
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+}

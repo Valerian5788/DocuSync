@@ -55,5 +55,15 @@ namespace DocuSync.Infrastructure.Data.Repositories
             return await _context.Requirements
                 .AnyAsync(r => r.DocumentTypeId == id);
         }
+
+        Task<DocumentType> IDocumentTypeRepository.UpdateAsync(DocumentType documentType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

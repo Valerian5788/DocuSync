@@ -75,11 +75,15 @@ namespace DocuSync.Functions.EmailProcessing
                         using var stream = new MemoryStream(attachment.Content);
 
                         // Get active requirements for client
-                        var requirements = await _requirementService.GetActiveForClientAsync(client.Id);
+                        var requirementsResult = await _requirementService.GetActiveForClientAsync(client.Id);
+                        if (!requirementsResult.IsSuccess)
+                        {
+                            _logger.LogWarning($"Failed to get requirements for client {client.Name}: {requirementsResult.Error}");
+                            continue;
+                        }
 
                         // For MVP: Use first active requirement
-                        // TODO: Implement smart requirement matching
-                        var requirement = requirements.FirstOrDefault();
+                        var requirement = requirementsResult.Data.FirstOrDefault();
                         if (requirement == null)
                         {
                             _logger.LogWarning($"No active requirements for client {client.Name}");
