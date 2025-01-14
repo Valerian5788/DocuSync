@@ -31,18 +31,6 @@ namespace DocuSync.Infrastructure.Data.Repositories
             return entity;
         }
 
-        public async Task UpdateAsync(DocumentType entity)
-        {
-            _context.Entry(entity).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteAsync(DocumentType entity)
-        {
-            _context.DocumentTypes.Remove(entity);
-            await _context.SaveChangesAsync();
-        }
-
         public async Task<IEnumerable<DocumentType>> GetByFrequencyAsync(DocumentFrequency frequency)
         {
             return await _context.DocumentTypes
@@ -56,14 +44,16 @@ namespace DocuSync.Infrastructure.Data.Repositories
                 .AnyAsync(r => r.DocumentTypeId == id);
         }
 
-        Task<DocumentType> IDocumentTypeRepository.UpdateAsync(DocumentType documentType)
+        public async Task UpdateAsync(DocumentType documentType)
         {
-            throw new NotImplementedException();
+            _context.Entry(documentType).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
 
-        public Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(DocumentType entity)
         {
-            throw new NotImplementedException();
+            _context.DocumentTypes.Remove(entity);
+            await _context.SaveChangesAsync();
         }
     }
 }
