@@ -1,0 +1,27 @@
+﻿@page "/mock-dashboard"
+@using MudBlazor
+
+<MudContainer>
+    <MudText Typo="Typo.h4" Class="mb-4">Dashboard</MudText>
+    
+    <DashboardStats Value="24" />
+    
+    <MudGrid Class="mt-4">
+        <MudItem xs="8">
+            <MudPaper Class="pa-4">
+                <MudText Typo="Typo.h6" Class="mb-4">Recent Activity</MudText>
+                <ActivityTimeline />
+            </MudPaper>
+        </MudItem>
+        
+        <MudItem xs="4">
+            <MudPaper Class="pa-4">
+                <MudText Typo="Typo.h6">Quick Stats</MudText>
+                <MudList T="string">
+                    <MudListItem T="string">Processed Today: 15</MudListItem>
+                    <MudListItem T="string">Success Rate: 94.5%</MudListItem>
+                </MudList>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudContainer>

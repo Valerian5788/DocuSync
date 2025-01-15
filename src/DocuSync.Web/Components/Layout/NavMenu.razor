@@ -1,4 +1,5 @@
 ﻿@using DocuSync.Application.Authorization.Constants
+@using MudBlazor
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">DocuSync</a>
@@ -10,13 +11,13 @@
 
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="flex-column">
-        <div class="nav-item px-3">
+        @* <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
             </NavLink>
         </div>
 
-        @* Administration Section *@
+
         <AuthorizeView Policy="@Policies.IsAdmin">
             <Authorized>
                 <div class="nav-item px-3 mt-3">
@@ -35,7 +36,7 @@
             </Authorized>
         </AuthorizeView>
 
-        @* Documents Section *@
+
         <div class="nav-item px-3 mt-3">
             <span class="text-light small">Documents</span>
         </div>
@@ -55,7 +56,10 @@
             <NavLink class="nav-link" href="portal-documents">
                 <span class="bi bi-cloud-download-nav-menu" aria-hidden="true"></span> Portal Documents
             </NavLink>
-        </div>
+        </div>  *@
+        <MudNavLink Href="/mock-dashboard">Dashboard</MudNavLink>
+        <MudNavLink Href="/mock-requirements">Requirements</MudNavLink>
+        <MudNavLink Href="/mock-documents">Documents</MudNavLink>
     </nav>
 </div>
 

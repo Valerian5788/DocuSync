@@ -1,0 +1,27 @@
+﻿@page "/mock-documents"
+@using MudBlazor
+
+<MudContainer>
+    <MudText Typo="Typo.h4" Class="mb-4">Documents Overview</MudText>
+    
+    <MudTable T="string" Items="@_documents" Dense="true" Hover="true">
+        <HeaderContent>
+            <MudTh>Document</MudTh>
+            <MudTh>Client</MudTh>
+            <MudTh>Date</MudTh>
+            <MudTh>Status</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>January Invoice</MudTd>
+            <MudTd>CompTech SPRL</MudTd>
+            <MudTd>2024-01-15</MudTd>
+            <MudTd>
+                <MudChip T="string" Color="Color.Success">Processed</MudChip>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+</MudContainer>
+
+@code {
+    private string[] _documents = new[] { "1", "2", "3", "4" };
+}

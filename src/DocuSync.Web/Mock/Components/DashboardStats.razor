@@ -1,0 +1,13 @@
+﻿@using MudBlazor
+<MudGrid>
+    <MudItem xs="3">
+        <MudPaper Class="pa-4" Elevation="2">
+            <MudText Typo="Typo.h6">Pending</MudText>
+            <MudText Typo="Typo.h4" Color="Color.Primary">@Value</MudText>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    [Parameter] public int Value { get; set; }
+}

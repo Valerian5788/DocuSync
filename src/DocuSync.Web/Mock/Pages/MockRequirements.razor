@@ -1,0 +1,31 @@
+﻿@page "/mock-requirements"
+@using MudBlazor
+
+<MudContainer>
+    <MudText Typo="Typo.h4" Class="mb-4">Document Requirements</MudText>
+    
+    <MudTable T="string" Items="@_requirements" Dense="true" Hover="true">
+        <HeaderContent>
+            <MudTh>Type</MudTh>
+            <MudTh>Due Date</MudTh>
+            <MudTh>Status</MudTh>
+            <MudTh></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>VAT Return Q1 2024</MudTd>
+            <MudTd>2024-04-20</MudTd>
+            <MudTd>
+                <MudChip T="string" Color="Color.Warning">Pending</MudChip>
+            </MudTd>
+            <MudTd>
+                <MudButton T="string" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small">
+                    Upload
+                </MudButton>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+</MudContainer>
+
+@code {
+    private string[] _requirements = new[] { "1", "2", "3" };
+}
