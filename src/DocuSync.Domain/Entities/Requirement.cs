@@ -6,7 +6,7 @@ namespace DocuSync.Domain.Entities
     public class Requirement : Entity
     {
         public Guid ClientId { get; private set; }
-        public DocumentType DocumentType { get; private set; }
+        public virtual DocumentType DocumentType { get; private set; }
         public DateTime DueDate { get; private set; }
         public RequirementStatus Status { get; private set; }
 

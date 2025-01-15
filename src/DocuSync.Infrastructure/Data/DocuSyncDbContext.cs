@@ -10,6 +10,7 @@ namespace DocuSync.Infrastructure.Data
         public DbSet<DocumentType> DocumentTypes { get; set; }
         public DbSet<Requirement> Requirements { get; set; }
         public DbSet<ClientUser> ClientUsers { get; set; }
+        public DbSet<PortalCredentials> PortalCredentials { get; set; }
 
         public DocuSyncDbContext(DbContextOptions<DocuSyncDbContext> options)
             : base(options)
@@ -24,6 +25,7 @@ namespace DocuSync.Infrastructure.Data
             modelBuilder.ApplyConfiguration(new ClientConfiguration());
             modelBuilder.ApplyConfiguration(new DocumentTypeConfiguration());
             modelBuilder.ApplyConfiguration(new RequirementConfiguration());
+            modelBuilder.ApplyConfiguration(new PortalCredentialsConfiguration());
         }
     }
 }
