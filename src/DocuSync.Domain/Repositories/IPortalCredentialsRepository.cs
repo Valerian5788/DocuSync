@@ -11,5 +11,6 @@ namespace DocuSync.Domain.Repositories
     public interface IPortalCredentialsRepository : IRepository<PortalCredentials>
     {
         Task<PortalCredentials> GetByClientAsync(Guid clientId, string portalType);
+        Task<bool> ExistsForClientAsync(Guid clientId, string portalType);
     }
 }

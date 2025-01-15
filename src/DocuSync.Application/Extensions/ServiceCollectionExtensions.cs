@@ -16,5 +16,7 @@ namespace DocuSync.Application.Extensions
             services.AddScoped<IClientService, ClientService>();
             return services;
         }
+
+        
     }
 }

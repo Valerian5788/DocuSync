@@ -13,6 +13,8 @@ using DocuSync.Application.Services;
 using DocuSync.Domain.Repositories;
 using DocuSync.Infrastructure.Data.Repositories;
 using DocuSync.Web.ExcelTemp;
+using DocuSync.Infrastructure.Portal.Interfaces;
+using DocuSync.Infrastructure.Portal.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +44,7 @@ builder.Services.AddScoped<IRequirementRepository, RequirementRepository>();
 builder.Services.AddScoped<IRequirementService, RequirementService>();
 builder.Services.AddScoped<IDocumentTypeRepository, DocumentTypeRepository>();
 builder.Services.AddScoped<IDocumentTypeService, DocumentTypeService>();
+builder.Services.AddScoped<IPortalService, OrangePortalService>();
 //Temp excel
 builder.Services.AddSingleton<IExcelDocumentService, ExcelDocumentService>();
 

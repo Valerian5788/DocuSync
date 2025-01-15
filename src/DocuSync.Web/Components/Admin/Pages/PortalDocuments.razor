@@ -1,0 +1,83 @@
+﻿@page "/portal-documents"
+@using DocuSync.Infrastructure.Portal.Interfaces
+@using DocuSync.Infrastructure.Portal.Models
+@using MudBlazor
+@inject IPortalService PortalService
+@inject IJSRuntime JS
+
+<MudContainer Class="mt-4">
+    <MudPaper Class="pa-4">
+        <MudText Typo="Typo.h5" Class="mb-4">Portal Documents</MudText>
+
+        @if (_loading)
+        {
+            <MudProgressCircular Indeterminate="true" />
+        }
+        else if (_error != null)
+        {
+            <MudAlert Severity="Severity.Error">@_error</MudAlert>
+        }
+        else
+        {
+            <MudTable Items="@_documents" Dense="true" Hover="true">
+                <HeaderContent>
+                    <MudTh>Name</MudTh>
+                    <MudTh>Type</MudTh>
+                    <MudTh>Date</MudTh>
+                    <MudTh>Status</MudTh>
+                    <MudTh></MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd>@context.Name</MudTd>
+                    <MudTd>@context.Type</MudTd>
+                    <MudTd>@context.Date.ToShortDateString()</MudTd>
+                    <MudTd>@context.Status</MudTd>
+                    <MudTd>
+                        <MudButton Variant="Variant.Filled" 
+                                 Color="Color.Primary"
+                                 Size="Size.Small"
+                                 OnClick="@(() => DownloadDocument(context.Id))">
+                            Download
+                        </MudButton>
+                    </MudTd>
+                </RowTemplate>
+            </MudTable>
+        }
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private bool _loading = true;
+    private string _error;
+    private IEnumerable<PortalDocument> _documents = new List<PortalDocument>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var result = await PortalService.GetDocumentsAsync();
+            if (result.IsSuccess)
+            {
+                _documents = result.Data;
+            }
+            else
+            {
+                _error = result.Error;
+            }
+        }
+        catch (Exception ex)
+        {
+            _error = "Failed to load portal documents";
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private async Task DownloadDocument(string documentId)
+    {
+        // For MVP, just show that click works
+        await JS.InvokeVoidAsync("alert", $"Download requested for document {documentId}");
+    }
+}
